@@ -1,2 +1,10 @@
 = Java Concurrent Collections
 
+The java.util.concurrent adds a lot of new collections that map somewhat nicely to our regular Collections.
+
+
+== Collection
+
+The regular collections has a lot of possible replacements depending what you want.
+
+ArrayBlockingQueue vs ConcurrentLinkedQueue vs LinkedBlockingQueue vs LinkedList vs LinkedTransferQueue
