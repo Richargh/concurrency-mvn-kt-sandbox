@@ -4,3 +4,6 @@ link:https://youtu.be/BOHK_w09pVA?t=605[Understand Kotlin Coroutines on Android 
 
 link:https://www.youtube.com/watch?v=lh2Vqt4DpHU[droidcon NYC 2018 - Coroutines by Example] which is just a good, albeit fast introduction
 
+== Basics
+
+link:https://kotlinlang.org/docs/tutorials/coroutines/coroutines-basic-jvm.html[Official Basic Tutorial]
