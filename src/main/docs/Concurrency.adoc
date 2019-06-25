@@ -1,0 +1,8 @@
+= Concurrency
+
+TODO: Concurrency vs parallelism.
+
+== On the JVM
+
+On the JVM we have two choice in the scope of this project: link:java/Java-Concurrency.adoc[Java-Concurrency] with all its collections and the addons that link:kotlin/Kotlin-Concurrency.adoc[Kotlin] provides.
+

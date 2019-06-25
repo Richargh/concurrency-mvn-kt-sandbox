@@ -2,7 +2,9 @@
 
 Concurrency is a hard problem in most languages. Reportedly it's very easy for Erlang developers but most projects I work on it's not easy. This projects plays around with concurrency a bit to better understand it. Look in link:src/test/kotlin[Tests] for some examples.
 
-== Usage
+If you want to see the research I did on concurrency you can check out the file on link:src/main/docs/Concurrency.adoc[Concurrency].
+
+== Getting Started / Demo
 
 `mvn verify`
 

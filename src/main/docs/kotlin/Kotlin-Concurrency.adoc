@@ -1,0 +1,4 @@
+= Kotlin Concurrency
+
+Kotlin by design has access to all Java concurrency tools. But Kotlin has also taken inspiration from languages like C# to add a new concept to the mix that is unique to Kotlin: link:Kotlin-Coroutines.adoc[Coroutines].
+

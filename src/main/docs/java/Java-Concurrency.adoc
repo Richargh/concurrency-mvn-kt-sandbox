@@ -1,0 +1,7 @@
+= Java Concurrency
+
+Java has had concurrency using threads and locking using `synchronize` for a long time. Somewhat more recently they have introduce link:Java-Concurrent-Collections.adoc[concurrent collections] that are reasonably performant and can be accessed from any thread.
+
+TODO: difference between different java collections
+
+TODO: different ways to do concurrency in Java.
