@@ -1,0 +1,11 @@
+= Sandbox: Playing around with Concurrency in Kotlin
+
+Concurrency is a hard problem in most languages. Reportedly it's very easy for Erlang developers but most projects I work on it's not easy. This projects plays around with concurrency a bit to better understand it. Look in link:src/test/kotlin[Tests] for some examples.
+
+== Usage
+
+`mvn verify`
+
+== Examples
+
+* EvictingQueuePerformanceCompareTest: building an *thread-safe* link:https://guava.dev/releases/19.0/api/docs/com/google/common/collect/EvictingQueue.html[evicting queue] (which the Guava Evicting Queue is not) from a ConcurrentLinkedQueue
