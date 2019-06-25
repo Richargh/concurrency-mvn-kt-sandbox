@@ -10,12 +10,12 @@ class FiboTest {
     fun `Fibo foo something test`() = runBlocking<Unit> {
         // arrange
         val spyPublisher = SpyPublisher()
-        val fibo = Fibo(spyPublisher)
+        val fibo = SuspendingFibo(spyPublisher)
 
         // act
         fibo.doSth()
 
         // assert
-        assertThat(spyPublisher.publishedMessages).containsExactly("doSth")
+        assertThat(spyPublisher.publishedMessages).containsExactly("doSth", "doRegular")
     }
 }
