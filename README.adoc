@@ -8,4 +8,4 @@ Concurrency is a hard problem in most languages. Reportedly it's very easy for E
 
 == Examples
 
-* EvictingQueuePerformanceCompareTest: building an *thread-safe* link:https://guava.dev/releases/19.0/api/docs/com/google/common/collect/EvictingQueue.html[evicting queue] (which the Guava Evicting Queue is not) from a ConcurrentLinkedQueue
+* link:src/test/kotlin/de/richargh/sandbox/kt/mvn/concurrency/EvictingQueuePerformanceCompareTest.kt[EvictingQueuePerformanceCompareTest]: building an *thread-safe* link:https://guava.dev/releases/19.0/api/docs/com/google/common/collect/EvictingQueue.html[evicting queue] (which the Guava Evicting Queue is not) from a ConcurrentLinkedQueue
