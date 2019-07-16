@@ -1,0 +1,41 @@
+= Comparing Akka and Kotlin Coroutines
+
+This comparison might seem strange at first. Actors can use coroutines instead of threads and we can use Kotlin coroutines to implement the actor model by encapsulating state and only communicating via message channels. But what are the differences when using these two approaches, how much does our code change when using one approach compared to the other and can we model the same things?
+
+Specifically we want to check the following problems when writing a *concurrent application*:
+
+.Akka vs Coroutines
+|===
+|Problem | Solution Akka | Solution Coroutine
+
+|Splitting up load
+|asdf
+|asdf
+
+|Subscribing to Events
+|asdf
+|asdf
+
+|Polling
+|asdf
+|asdf
+
+|Time-based Scheduling
+|asdf
+|asdf
+
+|===
+
+
+== Splitting up load
+
+Suppose ...
+
+== Subscribing to Events
+asdf
+
+== Polling
+asdf
+
+== Time-based Scheduling
+asdf

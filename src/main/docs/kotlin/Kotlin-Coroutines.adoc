@@ -7,3 +7,10 @@ link:https://www.youtube.com/watch?v=lh2Vqt4DpHU[droidcon NYC 2018 - Coroutines 
 == Basics
 
 link:https://kotlinlang.org/docs/tutorials/coroutines/coroutines-basic-jvm.html[Official Basic Tutorial]
+
+Kotlin provides an extension method to turn any regular java `interface Executor` into an `abstract class CoroutineDispatcher` called `Executor.asCoroutineDispatcher()`. So creating interop with your favorite framework is very much possible.
+
+* corutineScope {}
+* async {}
+* launch {}
+* when to actually write suspend in front of fun: for corutineScope & withContext

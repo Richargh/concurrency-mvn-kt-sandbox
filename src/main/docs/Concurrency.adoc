@@ -2,15 +2,52 @@
 
 Stackoverflow has this nice answer on the link:https://stackoverflow.com/questions/1050222/what-is-the-difference-between-concurrency-and-parallelism[between concurrency and parallelism]:
 
-[quote]
+[quote, Stackoverflow]
 ____
 Concurrency is when two or more tasks can start, run, and complete in overlapping time periods. It doesn't necessarily mean they'll ever both be running at the same instant. For example, multitasking on a single-core machine.
 
 Parallelism is when tasks literally run at the same time, e.g., on a multicore processor.
 ____
 
-
 == On the JVM
 
 On the JVM we have two choice in the scope of this project: link:java/Java-Concurrency.adoc[Java-Concurrency] with all its collections and the addons that link:kotlin/Kotlin-Concurrency.adoc[Kotlin] provides.
 
+== Mental Concurrency Models
+
+Most programming languages model concurrency with Threads. Each Thread can access the state from all other Threads. This *state sharing* between concurrent threads is mentally very challening:
+
+* it makes it very hard to say when a state changes its value.
+* if code reacts to state changes, it's very hard to say when it is triggered
+
+Suppose you have the following code which is executed by 5 Threads:
+
+[source,java]
+----
+class Foo implements Runnable {
+    private int counter = 0;
+
+    @Override
+    public void run(){
+        increment();
+        reactToCounter();
+    }
+
+    private void increment(){
+        counter++;
+    }
+
+    private final int someThreshold = 5;
+    private void reactToCounter(){
+        if(counter == someThreshold){
+            System.out.println("Threshold reached"); // <1> does something
+        }
+    }
+}
+----
+<1> Reaction
+
+
+How often is 1. reached? If the scheduler decides to switch to a different Thread before 1. is reached and if that's done for all five Threads, `"Threshold reached"` will be printed 5 times. Depending on where the scheduler switches to another Thread it can also be printed 0 times.
+
+Depending on the complexity of the code that shares state this can become a very big problem. Which is why the link:Actor-Model.adoc[Actor Model] is a very interesting alternative to sharing state. Plus somewhat recently link:Coroutine.adoc[Coroutines] have become very popular for concurrent processing. After we have analyzed both approaches individually we then want to link:Comparing-Akka-and-Coroutines.adoc[compare them] and see who wins :)

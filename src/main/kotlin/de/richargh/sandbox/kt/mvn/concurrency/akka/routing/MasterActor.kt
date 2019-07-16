@@ -7,6 +7,7 @@ import akka.routing.ActorRefRoutee
 import akka.routing.RoundRobinRoutingLogic
 import akka.routing.Routee
 import akka.routing.Router
+import akka.pattern.Patterns.ask
 
 class MasterActor private constructor(private val counterActor: ActorRef): AbstractActor() {
     companion object {
@@ -33,6 +34,7 @@ class MasterActor private constructor(private val counterActor: ActorRef): Abstr
     override fun createReceive() = receiveBuilder()
             .match(Work::class.java) {
                 router.route(it, sender)
+
             }
             .build()
 }

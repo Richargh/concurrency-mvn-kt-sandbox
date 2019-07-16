@@ -1,0 +1,218 @@
+= Akka Actors in Java
+
+* getContext?
+* Spawning Actors?
+
+== Example
+
+The link:asd[akka library] represents an actor like this (example from the link:https://developer.lightbend.com/guides/akka-quickstart-java/define-actors.html[Akka Quickstart]):
+
+[source,java]
+----
+public class Printer extends AbstractActor {
+    static public Props props() {
+        return Props.create(Printer.class, () -> new Printer());
+    }
+
+    static public class Greeting {
+        public final String message;
+
+        public Greeting(String message) {
+            this.message = message;
+        }
+    }
+
+    private int greetingCount = 0;
+
+    @Override
+    public Receive createReceive() {
+        return receiveBuilder()
+            .match(Greeting.class, greeting -> {
+                System.out.println("Received greeting number "+(++greetingCount)+" with the following message: "+greeting.message);
+            })
+            .build();
+    }
+}
+----
+
+By convention actors provide the static method `props()` to specify options for creating actors. In Akka we don't use `new` to create a new actor.
+
+The only public method is `createReceive()` and that method is only used to describe what message types the actor `Printer` reacts to. If you spawn multiple Printer actors they could run on separate Threads but will never share state. The only way for them to communicate is using messages.
+
+If you want to send a Greeting you need another actor: `Greeter`. This actor has a direct reference to the `Printer` and can tell it something. This telling results in a message being placed on the queue of Printer. If Printer is still busy with the previous greeting it won't immediately handle the new greeting:
+
+[source,java]
+----
+public class Greeter extends AbstractActor {
+
+    static public Props props(String message, ActorRef printerActor) {
+        return Props.create(Greeter.class, () -> new Greeter(message, printerActor));
+    }
+
+    private final String message;
+    private final ActorRef printerActor;
+
+    public Greeter(String message, ActorRef printerActor) {
+        this.message = message;
+        this.printerActor = printerActor;
+    }
+
+    @Override
+    public Receive createReceive() {
+        return receiveBuilder()
+            .match(Greet.class, x -> {
+                printerActor.tell(new Greeting(message), getSelf());
+            })
+            .build();
+    }
+}
+----
+
+Be careful about spawning actors yourself. If you do they could by mistake share state. Actors in Akka are created by the `akka.actor.ActorSystem` factory and the result is not a concrete instance but a reference to an actor. The benefit is that akka can distribute the actors wherever it wants:
+
+[quote, Akka Java Quickstart]
+____
+In Akka location doesn’t matter. Location transparency means that the ActorRef can, while retaining the same semantics, represent an instance of the running actor in-process or on a remote machine. [...]
+
+This enables the “let it crash” model of failure management in which the system can heal itself by crashing faulty Actors and restarting healthy ones.
+____
+
+If we combine all the things we have learned we can execute our actor system like this:
+
+[source,java]
+----
+public class AkkaQuickstart {
+    public static void main(String[] args) {
+        final ActorSystem system = ActorSystem.create("helloakka");
+
+        try {
+            final ActorRef printerActor = system.actorOf(Printer.props(), "printerActor");
+            final ActorRef howdyGreeter = system.actorOf(Greeter.props("Howdy", printerActor), "howdyGreeter");
+
+            howdyGreeter.tell(new Greet(), ActorRef.noSender());
+        } finally {
+            system.terminate();
+        }
+    }
+}
+----
+
+* the actor system creates the actors
+* actors communicate via messages and use them to share state
+* initial messages do not have a sender
+* actors can have and mutate state
+
+== Spawning Actors
+
+In addition to creating actors from outside, the link:https://doc.akka.io/docs/akka/current/typed/actor-lifecycle.html#dependency[actor lifecycle] also mentions that:
+
+[quote, Akka Actor Lifecycle]
+____
+an actor can create, or spawn, an arbitrary number of child actors, which in turn can spawn children of their own, thus forming an actor hierarchy. [...]
+
+The lifecycle of a child actor is tied to the parent – a child can stop itself or be stopped at any time but it can never outlive its parent.
+____
+
+== Actor Interaction Pattern
+
+According to the link:https://doc.akka.io/docs/akka/current/typed/interaction-patterns.html[official docs] actors can communicate in various ways:
+
+* Fire and forget via `actorRef.tell()`
+
+== Actor Hierarchy
+
+In Akka actors are organized into a link:https://doc.akka.io/docs/akka/current/guide/actors-intro.html[tree-like hierarchy].
+
+[quote, Akka Actors Intro paraphrased]
+____
+an actor that creates another actor becomes the parent of that new actor. [..]
+
+ * When an actor fails, its parent actor is notified and it can react to the failure.
+ * if the parent actor is stopped, all of its children are recursively stopped, too.
+* A supervisor (parent) can decide to restart its child actors on certain types of failures or stop them completely on others.
+* Restarts are not visible from the outside: collaborating actors can keep continuing sending messages while the target actor restarts.
+
+This service is called supervision and it is central to Akka.
+____
+
+=== Stopping an Actor
+
+Actors can stop themselves and their child actors based on internal events or an outside _poison pill_: `getContext().stop(getSelf())`.
+
+== Akka Message Delivery
+
+The Akka supports the following guarantee for message delivery to actors:
+
+* [x] _At-most-once delivery_
+* [ ] not At-least-once delivery 
+* [ ] not Exactly-once delivery
+
+The library writers provide link:https://doc.akka.io/docs/akka/current/guide/tutorial_3.html[ample reasons] for this choice and why they did not go for the other technical guarantees which other libraries do provide. In short the thing you care about are *domain level guarantees* and those cannot be given by the Akka library. There are multiple things that can go wrong even after message delivery to an actor such as database failure, nodes crashing, programming errors etc. Instead akka provides all the tools needed to programmers to provide the domain level guarantees wanted, or in the words of the library writers:
+
+[quote, Akka Tutorial 3]
+____
+The only entity that can report success is the application itself, since only it has any understanding of the domain guarantees required. No generalized framework can figure out the specifics of a particular domain and what is considered a success in that domain. [...]
+
+For these reasons Akka lifts the responsibilities of guarantees to the application itself, i.e. you have to implement them yourself with the tools that Akka provides. This gives you full control of the guarantees that you want to provide. 
+____
+
+Akka further guarantees that messages sent out by an actor A1 to actor A2 will be delivered in the order they were sent out. However if an actor A3 also sends messages to A2, A2 could receive these messages interleaved with the ones from A1. These ordering guarantees are only for messages between actors though. Actor failures are communicated via special error messages which have their own inbox. 
+
+Messages which cannot be delivered for some reason are send to the the `/deadletter` box. Actors can subscribe to that queue for debugging reasons via `akka.actor.DeadLetter`.
+
+== Supervision Strategy
+
+
+
+
+== Code Conventions
+
+Note that extending an AbstractActor does not automatically guarantee the strong isolation we want. We still need to follow some coding guidelines and not share state in any way but the way akka intends. We could circumvent akka by using globals in our actors with many consequences that only happen at runtime, sometimes when akka decides to distribute actors to remote machines.
+
+== Testing Actors in Akka
+
+Akka actors require an actor system, that can easily be created the same way as in main. We can use the `testkit` to observe our actor system:
+
+[source,java]
+----
+public class AkkaQuickstartTest {
+    static ActorSystem system;
+
+    @BeforeClass
+    public static void setup() {
+        system = ActorSystem.create();
+    }
+
+    @AfterClass
+    public static void teardown() {
+        TestKit.shutdownActorSystem(system);
+        system = null;
+    }
+
+    @Test
+    public void testGreeterActorSendingOfGreeting() {
+        // arrange
+        final TestKit testProbe = new TestKit(system);
+
+        final ActorRef printerActor = system.actorOf(Printer.props(), "printerActor");
+        final ActorRef howdyGreeter = system.actorOf(Greeter.props("Howdy", printerActor), "howdyGreeter");
+
+        // act
+        howdyGreeter.tell(new Greet(), ActorRef.noSender());
+
+        // assert
+        Greeting greeting = testProbe.expectMsgClass(Greeting.class);
+        assertEquals("howdy", greeting.message);
+    }
+}
+----
+
+Testkit also provides further capabilities like handling asynchronous testing.
+
+== Actor Conventions
+
+https://doc.akka.io/docs/akka/current/general/actor-systems.html#actor-best-practices
+
+== Configuration
+
+https://doc.akka.io/docs/akka/2.5.23/general/configuration.html

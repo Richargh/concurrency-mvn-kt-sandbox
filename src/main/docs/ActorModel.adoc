@@ -1,0 +1,32 @@
+= ActorModel
+
+The actor model was link:https://dl.acm.org/citation.cfm?id=1624804[proposed in 1973 by Carl Hewitt] and is a fundamentally different way of thinking about concurrency.
+
+[quote, Wikipedia slightly paraphrased]
+____
+"actors" are the universal primitives of concurrent computation. In response to a message that it receives, an actor can:
+
+* make local decisions
+* create more actors
+* send more messages
+* and determine how to respond to the next message received.
+
+Actors may modify their own private state, but can only affect each other indirectly through messaging
+____
+
+Interestingly this is very similar to what the Erlang Language calls a process. These two approaches are very similar but came to be link:http://erlang.org/pipermail/erlang-questions/2014-June/079891.html[independantly from each other]. We'll continue talking about the actor model, because it is implemented in many more languages than just Erlang.
+
+Note that the implementation of an actor still uses Threads or link:Coroutine.adoc[Coroutines] under the hood, the programmer just cannot access them any more and works with the higher level actor abstraction instead.
+
+In the programming language Go the actor way of thinking is heavily encouraged. Shared values are passed around on channels and only one so-called goroutine has access to the value at any given time. The book link:https://golang.org/doc/effective_go.html#sharing[Effective Go] summarizes it like this:
+
+[quote, Effective Go]
+____
+Do not communicate by sharing memory; instead, share memory by communicating.
+____
+
+== How an Actor works
+
+Actors are a pattern that can be implemented in a variety of ways. You need to establish strong isolation. Actors are only allowed to communicate using some form of inbox, state can never be public, neither for reading, nor for writing data. Classes are one way to achieve this strong isolation but not the only way.
+
+For a concrete implementation we can look at how actors are implemented in link:java/Akka-Java.adoc[Java using the Akka library].
