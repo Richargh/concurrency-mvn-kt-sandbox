@@ -10,4 +10,4 @@ If you want to see the research I did on concurrency you can check out the file 
 
 == Examples
 
-* link:src/test/kotlin/de/richargh/sandbox/kt/mvn/concurrency/EvictingQueuePerformanceCompareTest.kt[EvictingQueuePerformanceCompareTest]: building an *thread-safe* link:https://guava.dev/releases/19.0/api/docs/com/google/common/collect/EvictingQueue.html[evicting queue] (which the Guava Evicting Queue is not) from a ConcurrentLinkedQueue
+* link:src/test/kotlin/de/richargh/sandbox/kt/mvn/concurrency/EvictingQueuePerformanceCompareTest.kt[EvictingQueuePerformanceCompareTest]: building an *thread-safe* (which the Guava Evicting Queue is not) link:https://guava.dev/releases/19.0/api/docs/com/google/common/collect/EvictingQueue.html[evicting queue] from a ConcurrentLinkedQueue
