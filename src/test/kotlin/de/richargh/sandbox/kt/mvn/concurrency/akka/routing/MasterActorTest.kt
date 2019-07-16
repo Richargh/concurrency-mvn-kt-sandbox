@@ -11,9 +11,11 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import java.time.Duration
+import akka.pattern.Patterns.ask
+import java.util.concurrent.CompletableFuture
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class MasterTest {
+internal class MasterActorTest {
 
     private lateinit var system: ActorSystem
 
@@ -35,6 +37,8 @@ internal class MasterTest {
                 val maxCount = 1_000
                 // arrange
                 val counter = Counter()
+
+
                 val counterActor: ActorRef = system.actorOf(
                         CounterActor.props(counter), "counter")
                 val masterActor = system.actorOf(
@@ -45,7 +49,14 @@ internal class MasterTest {
                         Work(), ActorRef.noSender()) }
 
                 // assert
+                val foo = ask(counterActor, Blub(), Duration.ofMinutes(1)).toCompletableFuture()
+                CompletableFuture.allOf(foo)
+//                ask(counterActor, "fpoop", 10000).value()
+
+                println("Foo: $foo")
+
                 awaitAssert(Duration.ofMinutes(1)) {
+
                     println("Asserting ${counter.messageCount()} with ${counter.actorCount()} actors")
                     assertThat(counter.messageCount()).isEqualTo(maxCount)
                 }
