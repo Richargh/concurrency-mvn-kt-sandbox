@@ -1,9 +1,6 @@
 package de.richargh.sandbox.kt.mvn.concurrency
 
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestReporter
 import org.junit.jupiter.api.fail
@@ -36,5 +33,34 @@ class CoroutineTest {
             // assert
             fail("this should not happen, because we did cancel the job")
         }
+    }
+
+    @Test
+    fun `blub`(testReporter: TestReporter) = runBlocking<Unit> {
+        val foo = Foo(this)
+        foo.foo()
+        println("${Thread.currentThread().name} Stop")
+    }
+}
+
+class Foo(private val scope: CoroutineScope) {
+
+    suspend fun foo(): String {
+        val blub = withContext(scope.coroutineContext) {
+            println("${Thread.currentThread().name} Launch")
+
+        val bar = Bar()
+        bar.bar()
+
+        "foo"
+        }
+
+        return blub + "bar"
+    }
+}
+
+class Bar {
+    fun bar(){
+
     }
 }

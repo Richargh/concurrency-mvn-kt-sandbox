@@ -216,3 +216,11 @@ https://doc.akka.io/docs/akka/current/general/actor-systems.html#actor-best-prac
 == Configuration
 
 https://doc.akka.io/docs/akka/2.5.23/general/configuration.html
+
+== Actor Timers
+
+https://doc.akka.io/docs/akka/current/actors.html#actors-timers
+
+== Common Patterns
+
+https://doc.akka.io/docs/akka/current/howto.html
