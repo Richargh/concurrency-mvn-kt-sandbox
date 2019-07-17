@@ -1,4 +1,4 @@
-package de.richargh.sandbox.kt.mvn.concurrency.coroutines
+package de.richargh.sandbox.kt.mvn.concurrency.coroutines.channel
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.*
@@ -11,7 +11,7 @@ class ChannelSender(private val name: String, private val channel: Channel<Data>
 
     suspend fun sender() {
         for (i in 1..numPackages) {
-            println (threadContext() + " ChannelSender $name:   Send $i to   channel ${channel}")
+            println(threadContext() + " ChannelSender $name:   Send $i to   channel ${channel}")
             channel.send(Data(i))
             numPackagesSent++
         }
@@ -23,7 +23,7 @@ class ChannelReceiver(private val name: String, private val channel: Channel<Dat
 
     suspend fun receiver() {
         channel.consumeEach {data ->
-            println (threadContext() + " ChannelReceiver $name: Get  $data from channel ${channel}")
+            println(threadContext() + " ChannelReceiver $name: Get  $data from channel ${channel}")
             numPackagesReceived++
 
             delay(throttleInMs)

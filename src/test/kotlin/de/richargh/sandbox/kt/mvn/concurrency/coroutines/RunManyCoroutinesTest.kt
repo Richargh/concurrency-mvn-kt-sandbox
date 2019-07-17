@@ -9,7 +9,7 @@ internal class RunManyCoroutinesTest {
     @Test
     fun `running many coroutines with blocking sleep takes X times longer than with non-blocking delay`() {
         // arrange
-        val numCoRoutines = 100
+        val numCoRoutines = 10
         val threadPoolSize = 3
         val delayInMS = 100L
         val runManyBlockingCoroutines = RunManyCoroutines(threadPoolSize, numCoRoutines,    delayInMS, isBlocking = true)

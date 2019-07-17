@@ -2,9 +2,10 @@ package de.richargh.sandbox.kt.mvn.concurrency.coroutines
 
 import kotlinx.coroutines.*
 import java.util.concurrent.ForkJoinPool
+import kotlin.coroutines.experimental.migration.toExperimentalCoroutineContext
 
 fun main() = runBlocking(ForkJoinPool(10).asCoroutineDispatcher()) { // this: CoroutineScope
-    launch {
+    launch(CoroutineName(name="myscope")) {
         delay(2000L)
         println("3 Task from runBlocking")
     }

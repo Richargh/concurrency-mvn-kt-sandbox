@@ -6,6 +6,8 @@ fun main() = runBlocking {
     val job = coroutineScope {
         launch { doHello() }
         launch { doWorld() }
+
+        println("This is ... ")
     }
 
     println("!")
