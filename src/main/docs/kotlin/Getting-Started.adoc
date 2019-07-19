@@ -1,0 +1,24 @@
+= Getting Started with Kotlin Coroutines
+
+First please sign this waiver from link:https://www.youtube.com/watch?v=lh2Vqt4DpHU[droidcon NYC 2018 - Coroutines by Example]:
+
+* Your Code may do weird things
+* It may crash in ways you will never be able to reproduce
+* It might look correct, even if 10 developers read it, but be subtly wrong
+* ...
+
+Kotlin coroutines assume you have done so because running code asynchronously is opt-in.
+
+== Limiting Concurrency
+
+Limit concurrency
+
+== Suspend
+
+See link:https://www.youtube.com/watch?v=a3agLJQ6vt8[KotlinConf 2018 - Kotlin Coroutines in Practice by Roman Elizarov]
+
+What is a `suspend fun ...`? A function that does something long and waits for it to complete without blocking.
+
+What is `fun CoroutineScope.doSomething ...`? A function which launches a new coroutines, quickly returns and does not wait for them.
+
+A suspending function does not return until everything it wanted to do is done. So `suspend fun blub() = coroutineScope {}` does not return until everything in the scope has finished.

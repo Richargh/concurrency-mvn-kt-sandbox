@@ -14,3 +14,7 @@ Kotlin provides an extension method to turn any regular java `interface Executor
 * async {}
 * launch {}
 * when to actually write suspend in front of fun: for corutineScope & withContext
+
+== Futures
+
+In coroutineland Future<T> is called Deferred<T>.

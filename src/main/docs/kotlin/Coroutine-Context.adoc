@@ -1,0 +1,26 @@
+= Coroutine Context
+
+Dispatchers are coroutine contexts, these contexts add relevant information like
+
+* the name of the Coroutine `coroutineContext[CoroutineName]` for debugging
+* the current Job `coroutineContext[Job]` to see its status or children
+
+You can also add new elements to the context:
+
+[source,kotlin]
+----
+class NewContextElement: AbstractCoroutineContextElement(Key){
+    companion object Key: CoroutineContext.Key<NewContextElement>
+
+    fun doSth(){
+
+    }
+}
+
+class VideoStore {
+    fun rent() = runBlocking<Unit>{
+
+    }
+}
+
+----
