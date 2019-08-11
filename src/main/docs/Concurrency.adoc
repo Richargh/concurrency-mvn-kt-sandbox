@@ -5,7 +5,7 @@ Stackoverflow has this nice answer on the link:https://stackoverflow.com/questio
 [quote, Stackoverflow]
 ____
 Concurrency is when two or more tasks can start, run, and complete in overlapping time periods. It doesn't necessarily mean they'll ever both be running at the same instant. For example, multitasking on a single-core machine.
-
+seit202
 Parallelism is when tasks literally run at the same time, e.g., on a multicore processor.
 ____
 
