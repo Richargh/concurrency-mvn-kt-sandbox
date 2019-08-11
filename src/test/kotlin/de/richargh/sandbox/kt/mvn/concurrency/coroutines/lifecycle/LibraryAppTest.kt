@@ -1,5 +1,7 @@
 package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle
 
+import de.richargh.sandbox.kt.mvn.concurrency.coroutines.runBlockingTest
+import kotlinx.coroutines.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -10,7 +12,7 @@ internal class LibraryAppTest{
     @Test
     fun `without initialization there are no books available`() {
         // arrange
-        val app = LibraryApp(FileSystemBookStore(bookUri))
+        val app = LibraryApp(Dispatchers.Main, FileSystemBookStore(bookUri))
 
         // act
 
@@ -19,9 +21,9 @@ internal class LibraryAppTest{
     }
 
     @Test
-    fun `without initialization there are books available`() {
+    fun `without initialization there are books available`() = runBlockingTest {
         // arrange
-        val app = LibraryApp(FileSystemBookStore(bookUri))
+        val app = LibraryApp(Dispatchers.Main, FileSystemBookStore(bookUri))
 
         // act
         app.initialize()
