@@ -1,0 +1,3 @@
+= Suspend Functions
+
+Suspend functions can *stop* and `yield` their thread without blocking, can be *resumed* later, can only be called from another `suspend` function.

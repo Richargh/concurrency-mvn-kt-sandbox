@@ -1,0 +1,5 @@
+= Coroutine Starter
+
+`coroutineScope {}` is the coroutine builder we want to use.
+
+`launch {}` is for actions where we don't care about the result. If we want the result we use `async {}.await()`.
