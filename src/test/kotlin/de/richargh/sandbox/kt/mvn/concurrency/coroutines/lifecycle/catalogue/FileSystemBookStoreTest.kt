@@ -1,7 +1,6 @@
-package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle
+package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.catalogue
 
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.runBlockingTest
-import kotlinx.coroutines.async
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -12,12 +11,19 @@ internal class FileSystemBookStoreTest {
     @Test
     fun `can find all books in local file system`() = runBlockingTest {
         // arrange
-        val bookStore: RemoteBookStore = FileSystemBookStore(bookUri)
+        val bookStore: RemoteBookStore =
+                FileSystemBookStore(bookUri)
 
         // act
         val allBooks = bookStore.allBooks()
 
         // assert
-        assertThat(allBooks).containsExactly(Book("No Code"), Book("Destructoring"))
+        assertThat(allBooks.map { it.title }).containsExactly(
+                "No Code",
+                "Destructoring")
     }
+
+//    private fun hasBooksNamed(firstBookName: String, vararg otherBookNames: String): Matcher<Collection<Book>> {
+//
+//    }
 }

@@ -1,4 +1,4 @@
-package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle
+package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel

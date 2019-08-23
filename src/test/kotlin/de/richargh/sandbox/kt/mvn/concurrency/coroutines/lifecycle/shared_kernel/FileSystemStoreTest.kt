@@ -1,4 +1,4 @@
-package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle
+package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel
 
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat

@@ -14,6 +14,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 
 internal class ChannelSampleTest {
 
+    @ObsoleteCoroutinesApi
     @Test
     fun `data exchanged between one sender and two receivers via coroutine channel is not lost`() {
         val threadPoolSize = 2  // for one sender and two receivers

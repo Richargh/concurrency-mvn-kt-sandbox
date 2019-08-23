@@ -21,6 +21,7 @@ class ChannelSender(private val name: String, private val channel: Channel<Data>
 class ChannelReceiver(private val name: String, private val channel: Channel<Data>, private val throttleInMs: Long) {
     var numPackagesReceived = 0
 
+    @ObsoleteCoroutinesApi
     suspend fun receiver() {
         channel.consumeEach {data ->
             println(threadContext() + " ChannelReceiver $name: Get  $data from channel ${channel}")

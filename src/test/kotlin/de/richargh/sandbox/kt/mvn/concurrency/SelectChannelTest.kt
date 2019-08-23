@@ -1,11 +1,13 @@
 package de.richargh.sandbox.kt.mvn.concurrency
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
 class SelectChannelTest {
     
+    @ExperimentalCoroutinesApi
     @Test
     fun `fooo`() {
         // arrange

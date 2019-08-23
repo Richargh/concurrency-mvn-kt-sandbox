@@ -21,6 +21,8 @@ class FiboTest {
         assertThat(spyPublisher.publishedMessages).containsExactly("doSth", "doRegular")
     }
 
+    @ObsoleteCoroutinesApi
+    @ExperimentalCoroutinesApi
     @Test
     fun `start lots of stuff `() = runBlocking<Unit> {
         launch { // context of the parent, main runBlocking coroutine

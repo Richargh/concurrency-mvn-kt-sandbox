@@ -1,14 +1,20 @@
-package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle
+package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.dashboard
 
+import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.catalogue.Book
+import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.catalogue.RemoteBookStore
+import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel.Lifecycle
+import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel.Publisher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlin.coroutines.CoroutineContext
 
-class LibraryApp(
+class DashboardApp(
         private val dispatcher: CoroutineDispatcher,
-        private val bookStore: RemoteBookStore): Lifecycle {
+        private val bookStore: RemoteBookStore,
+        private val publisher: Publisher):
+        Lifecycle {
 
     private val job = Job()
 

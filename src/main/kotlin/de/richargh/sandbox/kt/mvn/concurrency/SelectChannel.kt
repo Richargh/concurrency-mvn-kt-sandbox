@@ -1,6 +1,7 @@
 package de.richargh.sandbox.kt.mvn.concurrency
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
@@ -20,6 +21,7 @@ class SelectChannel {
     }
 }
 
+@ExperimentalCoroutinesApi
 fun CoroutineScope.fizz() = produce<String> {
     while (true) { // sends "Fizz" every 300 ms
         delay(300)
@@ -27,6 +29,7 @@ fun CoroutineScope.fizz() = produce<String> {
     }
 }
 
+@ExperimentalCoroutinesApi
 fun CoroutineScope.buzz() = produce<String> {
     while (true) { // sends "Buzz!" every 500 ms
         delay(500)
