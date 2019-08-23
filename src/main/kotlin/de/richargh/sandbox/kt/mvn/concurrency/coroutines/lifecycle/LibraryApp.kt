@@ -1,8 +1,10 @@
 package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.coroutineContext
 
 class LibraryApp(
         private val dispatcher: CoroutineDispatcher,
@@ -22,7 +24,6 @@ class LibraryApp(
     }
 
     override fun start() {
-
     }
 
     override fun shutdown() {
