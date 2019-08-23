@@ -4,10 +4,7 @@ import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.catalogue.Boo
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.catalogue.RemoteBookStore
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel.Lifecycle
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel.Notifier
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class LibraryApp(
@@ -16,17 +13,13 @@ class LibraryApp(
         private val notifier: Notifier):
         Lifecycle {
 
-    private val job = Job()
-
+    private val job = SupervisorJob()
     override val coroutineContext: CoroutineContext
         get() = job + dispatcher + CoroutineName("LibraryApp")
 
     private val books = mutableListOf<Book>()
 
     override suspend fun initialize() = coroutineScope {
-        bookStore.allBooks().forEach { books.add(it) }
-
-        Unit
     }
 
     override fun start() {
@@ -35,7 +28,4 @@ class LibraryApp(
     override fun shutdown() {
         job.cancel()
     }
-
-    val bookCount
-        get() = books.size
 }

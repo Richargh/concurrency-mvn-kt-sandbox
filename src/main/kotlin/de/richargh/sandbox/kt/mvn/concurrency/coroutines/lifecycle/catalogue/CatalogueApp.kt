@@ -2,10 +2,7 @@ package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.catalogue
 
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel.Lifecycle
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel.Notifier
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class CatalogueApp(
@@ -14,10 +11,9 @@ class CatalogueApp(
         private val notifier: Notifier):
         Lifecycle {
 
-    private val job = Job()
-
+    private val job = SupervisorJob()
     override val coroutineContext: CoroutineContext
-        get() = job + dispatcher + CoroutineName("LibraryApp")
+        get() = job + dispatcher + CoroutineName("CatalogueApp")
 
 
     private val books = mutableListOf<Book>()
