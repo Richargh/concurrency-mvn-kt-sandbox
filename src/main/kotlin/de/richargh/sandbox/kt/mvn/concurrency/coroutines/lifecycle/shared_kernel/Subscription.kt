@@ -2,6 +2,6 @@ package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kerne
 
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel_api.Event
 
-interface Subscription<T> where T: Event {
+interface Subscription {
     fun close()
 }

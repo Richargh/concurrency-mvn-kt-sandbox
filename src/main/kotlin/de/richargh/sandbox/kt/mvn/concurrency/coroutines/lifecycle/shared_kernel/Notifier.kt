@@ -1,9 +1,11 @@
 package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel
 
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel_api.Event
+import kotlin.reflect.KClass
 
-interface Publisher {
-    fun <AnyEvent> subscribe(notification: (AnyEvent) -> Unit): Subscription<AnyEvent> where AnyEvent: Event
+interface Notifier {
+
+    fun subscribe(event: KClass<out Event>, callback: (Event) -> Unit): Subscription
 
     fun publish(event: Event)
 }

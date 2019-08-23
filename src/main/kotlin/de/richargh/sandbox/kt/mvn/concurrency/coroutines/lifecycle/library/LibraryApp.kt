@@ -3,7 +3,7 @@ package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.library
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.catalogue.Book
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.catalogue.RemoteBookStore
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel.Lifecycle
-import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel.Publisher
+import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel.Notifier
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Job
@@ -13,7 +13,7 @@ import kotlin.coroutines.CoroutineContext
 class LibraryApp(
         private val dispatcher: CoroutineDispatcher,
         private val bookStore: RemoteBookStore,
-        private val publisher: Publisher):
+        private val notifier: Notifier):
         Lifecycle {
 
     private val job = Job()
