@@ -1,12 +1,15 @@
 package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel
 
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.shared_kernel_api.Event
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.reflect.KClass
 
-class LocalNotifier: Notifier {
+class LocalNotifier(private val dispatcher: CoroutineDispatcher): Notifier, CoroutineScope {
+
+    private val job = SupervisorJob()
+    override val coroutineContext
+        get() = Dispatchers.Main + job
 
     private val subscriptions = ConcurrentLinkedQueue<LocalSubscription>()
 
@@ -17,7 +20,12 @@ class LocalNotifier: Notifier {
     }
 
     override fun publish(event: Event){
-        subscriptions.filter { it.eventType == event::class }.forEach { it.callback.invoke(event) }
+        subscriptions.filter { it.eventType == event::class }.forEach {
+            launch(dispatcher) {
+                it.callback.invoke(event)
+            }
+            it.callback.invoke(event)
+        }
     }
 
 }

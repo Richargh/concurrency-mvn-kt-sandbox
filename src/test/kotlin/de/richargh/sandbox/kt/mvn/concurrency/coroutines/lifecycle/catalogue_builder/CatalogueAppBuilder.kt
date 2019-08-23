@@ -12,7 +12,7 @@ class CatalogueAppBuilder{
     private val bookUri = this::class.java.getResource("Books.txt").toURI()
 
     private var bookStore: RemoteBookStore = FileSystemBookStore(bookUri)
-    private var notifier: Notifier = LocalNotifier()
+    private var notifier: Notifier = LocalNotifier(Dispatchers.Default)
 
     fun build() = CatalogueApp(
             Dispatchers.Main,
