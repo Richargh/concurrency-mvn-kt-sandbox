@@ -22,8 +22,4 @@ internal class FileSystemBookStoreTest {
                 "No Code",
                 "Destructoring")
     }
-
-//    private fun hasBooksNamed(firstBookName: String, vararg otherBookNames: String): Matcher<Collection<Book>> {
-//
-//    }
 }
