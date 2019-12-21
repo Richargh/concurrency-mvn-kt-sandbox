@@ -1,25 +1,21 @@
-package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.dashboard
+package de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.catalogue
 
-import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.catalogue.Book
-import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.catalogue.RemoteBookStore
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.shared_kernel.Lifecycle
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.shared_kernel.Notifier
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.coroutineScope
-import kotlin.coroutines.CoroutineContext
 
-class DashboardApp(
-        private val dispatcher: CoroutineDispatcher,
+class CatalogueApp(
+        dispatcher: CoroutineDispatcher,
         private val bookStore: RemoteBookStore,
         private val notifier: Notifier):
         Lifecycle {
 
-    private val job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = job + dispatcher + CoroutineName("LibraryApp")
+    private val job = SupervisorJob()
+    override val coroutineContext = job + dispatcher +
+                                    CoroutineName("CatalogueApp")
 
     private val books = mutableListOf<Book>()
 
@@ -30,6 +26,7 @@ class DashboardApp(
     }
 
     override fun start() {
+
     }
 
     override fun shutdown() {

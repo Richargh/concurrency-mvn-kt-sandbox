@@ -1,4 +1,4 @@
-package de.richargh.sandbox.kt.mvn.concurrency.coroutines.lifecycle.dashboard
+package de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.library
 
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.catalogue.Book
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.catalogue.RemoteBookStore
@@ -6,27 +6,21 @@ import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.shared_kern
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.shared_kernel.Notifier
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.coroutineScope
-import kotlin.coroutines.CoroutineContext
 
-class DashboardApp(
-        private val dispatcher: CoroutineDispatcher,
+class LibraryApp(
+        dispatcher: CoroutineDispatcher,
         private val bookStore: RemoteBookStore,
         private val notifier: Notifier):
         Lifecycle {
 
-    private val job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = job + dispatcher + CoroutineName("LibraryApp")
+    private val job = SupervisorJob()
+    override val coroutineContext = job + dispatcher + CoroutineName("LibraryApp")
 
     private val books = mutableListOf<Book>()
 
     override suspend fun initialize() = coroutineScope {
-        bookStore.allBooks().forEach { books.add(it) }
-
-        Unit
     }
 
     override fun start() {
@@ -35,7 +29,4 @@ class DashboardApp(
     override fun shutdown() {
         job.cancel()
     }
-
-    val bookCount
-        get() = books.size
 }
