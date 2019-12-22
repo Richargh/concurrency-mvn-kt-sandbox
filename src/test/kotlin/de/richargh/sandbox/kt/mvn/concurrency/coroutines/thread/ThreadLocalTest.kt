@@ -1,4 +1,4 @@
-package de.richargh.sandbox.kt.mvn.concurrency.coroutines
+package de.richargh.sandbox.kt.mvn.concurrency.coroutines.thread
 
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.test_helper.testBlocking
 import kotlinx.coroutines.*
@@ -42,7 +42,8 @@ class ThreadLocalTest {
                 myThreadLocal.get()
             }
         }
-        myThreadLocal.set(MyData("wontbethere"))
+        myThreadLocal.set(
+                MyData("wontbethere"))
 
         // assert
         Assertions.assertThat(value.await()).isNull()
@@ -55,7 +56,8 @@ class ThreadLocalTest {
         val expected = MyData("will be there")
 
         // act
-        myThreadLocal.set(MyData("wont be there"))
+        myThreadLocal.set(
+                MyData("wont be there"))
         val value: Deferred<MyData?> = async(Dispatchers.Default + myThreadLocal.asContextElement(expected)) {
             delay(100)
             withContext(executor) {
@@ -93,7 +95,8 @@ class ThreadLocalTest {
 
         // act
         val value: Deferred<MyData?> = async(Dispatchers.Default + myThreadLocal.asContextElement(expected)) {
-            withContext(executor + myThreadLocal.asContextElement(MyData("wont be there"))) {
+            withContext(executor + myThreadLocal.asContextElement(
+                    MyData("wont be there"))) {
                 delay(100)
             }
             myThreadLocal.get()
@@ -111,7 +114,8 @@ class ThreadLocalTest {
         // act
         val value: Deferred<MyData?> = async(Dispatchers.Default + myThreadLocal.asContextElement()) {
             delay(100)
-            myThreadLocal.set(MyData("wont be there"))
+            myThreadLocal.set(
+                    MyData("wont be there"))
             delay(100)
             myThreadLocal.get()
         }

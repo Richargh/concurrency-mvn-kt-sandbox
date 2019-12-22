@@ -1,7 +1,6 @@
 package de.richargh.sandbox.kt.mvn.concurrency.coroutines
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import kotlin.math.ceil
 
@@ -18,8 +17,8 @@ internal class SleepVsDelayTest {
                 RunManyCoroutines(threadPoolSize, numCoRoutines, delayInMS, isBlocking = false)
 
         val offset = 30 // fixed offset for startup, in ms
-        val min_factor = 0.7
-        val max_factor = 1.5
+        val minFactor = 0.7
+        val maxFactor = 1.5
 
         // act
         val durationBlocking = runManyBlockingCoroutines.startManyCoroutines()
@@ -32,10 +31,10 @@ internal class SleepVsDelayTest {
                 offset + ceil(numCoRoutines.toDouble() / threadPoolSize.toDouble()).toLong() * delayInMS
         val expectedDurationNonBlocking = offset + 1 * delayInMS
 
-        assertThat(durationBlocking * min_factor).isLessThan(expectedDurationBlocking.toDouble())
-        assertThat(expectedDurationBlocking.toDouble()).isLessThan(durationBlocking * max_factor)
+        assertThat(durationBlocking * minFactor).isLessThan(expectedDurationBlocking.toDouble())
+        assertThat(expectedDurationBlocking.toDouble()).isLessThan(durationBlocking * maxFactor)
 
-        assertThat(durationNonBlocking * min_factor).isLessThan(expectedDurationNonBlocking.toDouble())
-        assertThat(expectedDurationNonBlocking.toDouble()).isLessThan(durationNonBlocking * max_factor)
+        assertThat(durationNonBlocking * minFactor).isLessThan(expectedDurationNonBlocking.toDouble())
+        assertThat(expectedDurationNonBlocking.toDouble()).isLessThan(durationNonBlocking * maxFactor)
     }
 }

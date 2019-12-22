@@ -30,7 +30,7 @@ internal class SemiBlockingMultiMapTest {
                 val concurrentMultiMap = SemiBlockingMultiMap<Int, String>(initialCapacity)
 
                 // act
-                (1..elementCount).forEach {
+                repeat(elementCount) {
                     launch {
                         delay(it.toLong())
                         val collection = concurrentMultiMap[aKey]
@@ -57,7 +57,7 @@ internal class SemiBlockingMultiMapTest {
 
                 // act
                 coroutineScope {
-                    (1..addCount).forEach {
+                    repeat(addCount) {
                         launch {
                             delay(it.toLong())
                             concurrentMultiMap[aKey].add(it.toString())

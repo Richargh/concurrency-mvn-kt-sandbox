@@ -45,8 +45,7 @@ internal class MasterActorTest {
                         MasterActor.props(counterActor), "masterActor")
 
                 // act
-                (1..maxCount).forEach { _ -> masterActor.tell(
-                        Work(), ActorRef.noSender()) }
+                repeat(maxCount){ masterActor.tell(Work(), ActorRef.noSender()) }
 
                 // assert
                 val foo = ask(counterActor, Blub(), Duration.ofMinutes(1)).toCompletableFuture()
