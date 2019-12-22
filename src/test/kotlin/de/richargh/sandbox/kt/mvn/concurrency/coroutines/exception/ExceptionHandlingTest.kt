@@ -9,27 +9,32 @@ internal class ExceptionHandlingTest {
 
     @Test
     fun `exception is thrown in a launched scope and can be caught outside`() {
+        // arrange
+
+        // act
         val act = {
             testBlocking(Dispatchers.Default) {
                 launch {
                     delay(500)
-                    throw MyException(
-                            "evil")
+                    throw MyException("evil")
                 }
             }
         }
 
+        // assert
         assertThrows<MyException>(act)
     }
 
     @Test
     fun `exception is thrown in an async scope and can be caught outside`() {
+        // arrange
+
+        // act
         val act = {
             testBlocking(Dispatchers.Default) {
                 async {
                     delay(500)
-                    throw MyException(
-                            "evil")
+                    throw MyException("evil")
                 }
             }
         }
@@ -38,28 +43,13 @@ internal class ExceptionHandlingTest {
     }
 
     @Test
-    fun `exception is thrown in a launch scope and can be caught with handler`() {
-        val handler = CoroutineExceptionHandler { _, exception ->
-            println("Caught $exception with suppressed ${exception.suppressed?.contentToString()}")
-        }
-
-        val supervisionJob = SupervisorJob()
-        testBlocking(supervisionJob + handler) {
-            async(handler) {
-                delay(500)
-                throw MyException(
-                        "evil")
-            }
-        }
-
-    }
-
-    @Test
     fun `exception is thrown in an async scope and cannot be caught with handler`() {
+        // arrange
         val handler = CoroutineExceptionHandler { _, exception ->
             println("Caught $exception with suppressed ${exception.suppressed?.contentToString()}")
         }
 
+        // act
         val act = {
             testBlocking(handler) {
                 async {
@@ -71,6 +61,7 @@ internal class ExceptionHandlingTest {
             }
         }
 
+        // assert
         assertThrows<MyException>(act)
     }
 

@@ -1,11 +1,9 @@
-package de.richargh.sandbox.kt.mvn.concurrency.coroutines.context
+package de.richargh.sandbox.kt.mvn.concurrency.coroutines.thread
 
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.test_helper.testBlocking
 import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.util.concurrent.ConcurrentLinkedDeque
@@ -18,7 +16,8 @@ class CustomContinuationInterceptorTest {
     @Test
     fun `can retrieve coroutine name from the context`(){
         // arrange
-        val loggingInterceptor = LoggingContinuationInterceptor()
+        val loggingInterceptor =
+                LoggingContinuationInterceptor()
 
         // act
         testBlocking(loggingInterceptor + CoroutineName("block")) {
@@ -42,7 +41,7 @@ private class LoggingContinuationInterceptor(): ContinuationInterceptor {
     override val key = Key
 
     override fun <T> interceptContinuation(continuation: Continuation<T>): Continuation<T> {
-
+        // You could also handle ThreadLocal variables here if the framework you use does not support coroutines
         pastContinuations += continuation.context[CoroutineName]?.name ?: continuation.toString()
         return continuation
     }

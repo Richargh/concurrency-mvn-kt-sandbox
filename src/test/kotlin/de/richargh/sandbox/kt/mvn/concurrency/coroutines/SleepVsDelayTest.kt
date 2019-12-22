@@ -18,7 +18,7 @@ internal class SleepVsDelayTest {
 
         val offset = 30 // fixed offset for startup, in ms
         val minFactor = 0.7
-        val maxFactor = 1.5
+        val maxFactor = 1.7
 
         // act
         val durationBlocking = runManyBlockingCoroutines.startManyCoroutines()
