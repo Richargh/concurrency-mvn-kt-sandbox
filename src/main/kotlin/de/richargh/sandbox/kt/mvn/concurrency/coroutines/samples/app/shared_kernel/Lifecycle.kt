@@ -6,7 +6,7 @@ interface Lifecycle: CoroutineScope {
 
     suspend fun initialize()
 
-    fun start()
+    fun CoroutineScope.start()
 
     fun shutdown()
 }

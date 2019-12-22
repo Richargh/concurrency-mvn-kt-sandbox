@@ -2,10 +2,7 @@ package de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.catalogue
 
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.shared_kernel.Lifecycle
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.shared_kernel.Notifier
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 
 class CatalogueApp(
         dispatcher: CoroutineDispatcher,
@@ -13,9 +10,9 @@ class CatalogueApp(
         private val notifier: Notifier):
         Lifecycle {
 
-    private val job = SupervisorJob()
-    override val coroutineContext = job + dispatcher +
-                                    CoroutineName("CatalogueApp")
+    override val coroutineContext = SupervisorJob() +
+                                    dispatcher +
+                                    CoroutineName(javaClass.simpleName)
 
     private val books = mutableListOf<Book>()
 
@@ -25,12 +22,12 @@ class CatalogueApp(
         Unit
     }
 
-    override fun start() {
+    override fun CoroutineScope.start() {
 
     }
 
     override fun shutdown() {
-        job.cancel()
+        cancel()
     }
 
     val bookCount

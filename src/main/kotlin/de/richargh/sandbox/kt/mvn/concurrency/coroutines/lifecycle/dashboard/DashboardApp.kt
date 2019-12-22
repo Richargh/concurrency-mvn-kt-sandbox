@@ -4,10 +4,7 @@ import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.catalogue.B
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.catalogue.RemoteBookStore
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.shared_kernel.Lifecycle
 import de.richargh.sandbox.kt.mvn.concurrency.coroutines.samples.app.shared_kernel.Notifier
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class DashboardApp(
@@ -16,10 +13,9 @@ class DashboardApp(
         private val notifier: Notifier):
         Lifecycle {
 
-    private val job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = job + dispatcher + CoroutineName("LibraryApp")
+    override val coroutineContext = Job() +
+                                    dispatcher +
+                                    CoroutineName(javaClass.simpleName)
 
     private val books = mutableListOf<Book>()
 
@@ -29,11 +25,12 @@ class DashboardApp(
         Unit
     }
 
-    override fun start() {
+    override fun CoroutineScope.start() {
+
     }
 
     override fun shutdown() {
-        job.cancel()
+        cancel()
     }
 
     val bookCount

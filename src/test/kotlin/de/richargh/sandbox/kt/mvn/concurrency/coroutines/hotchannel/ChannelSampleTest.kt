@@ -19,8 +19,7 @@ internal class ChannelSampleTest {
         runBlocking(ForkJoinPool(threadPoolSize).asCoroutineDispatcher()) {
             // arrange
             val channel = Channel<Data>(capacity = channelBufferSize)
-            val sender       =
-                    ChannelSender("S1", channel, numPackages)
+            val sender = ChannelSender("S1", channel, numPackages)
             val slowReceiver = ChannelReceiver("R1", channel, throttleInMs * 5)
             val fastReceiver = ChannelReceiver("R2", channel, throttleInMs * 1)
 
