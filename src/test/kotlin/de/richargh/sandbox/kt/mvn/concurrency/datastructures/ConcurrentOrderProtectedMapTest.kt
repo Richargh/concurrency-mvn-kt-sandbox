@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestReporter
 import java.util.concurrent.ConcurrentHashMap
 
-
 internal class ConcurrentOrderProtectedMapTest{
     @Test
     fun `should be filled because the adds have a higher version number`(testReporter: TestReporter) {
