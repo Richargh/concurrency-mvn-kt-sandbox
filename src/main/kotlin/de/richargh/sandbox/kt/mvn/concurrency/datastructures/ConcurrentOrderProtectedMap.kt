@@ -24,11 +24,12 @@ class ConcurrentOrderProtectedMap<K, V: Versionable> {
 
     fun count() = entries.mappingCount()
 
-    private fun ConcurrentHashMap<K, V>.putIfNewer(key: K, value: V, beforeChange: (V) -> Unit) =
+    private fun ConcurrentHashMap<K, V>.putIfNewer(key: K, value: V, beforePut: (V) -> Unit) =
             compute(key) { _, existing: V? ->
                 when {
-                    existing == null || existing.version < value.version -> {
-                        beforeChange(value)
+                    (existing == null || existing.version < value.version)
+                    && isDeletedVersionSmaller(key, value) -> {
+                        beforePut(value)
                         value
                     }
                     else                                                 -> {
@@ -36,6 +37,11 @@ class ConcurrentOrderProtectedMap<K, V: Versionable> {
                     }
                 }
             }
+
+    private fun isDeletedVersionSmaller(key: K, value: V): Boolean {
+        val lastDeletedVersion = deletes[key]
+        return lastDeletedVersion == null || lastDeletedVersion < value.version
+    }
 
     private fun ConcurrentHashMap<K, Version>.putIfNewer(key: K, version: Version) =
             compute(key) { _, existingVersion: Version? ->
@@ -45,11 +51,11 @@ class ConcurrentOrderProtectedMap<K, V: Versionable> {
                 }
             }
 
-    private fun ConcurrentHashMap<K, V>.removeIfNewer(key: K, value: V, beforeChange: (V?) -> Unit) =
+    private fun ConcurrentHashMap<K, V>.removeIfNewer(key: K, value: V, beforeRemove: (V?) -> Unit) =
             compute(key) { _, existing: V? ->
                 when {
                     existing == null || existing.version < value.version -> {
-                        beforeChange(existing)
+                        beforeRemove(existing)
                         null
                     }
                     else                                                 -> {

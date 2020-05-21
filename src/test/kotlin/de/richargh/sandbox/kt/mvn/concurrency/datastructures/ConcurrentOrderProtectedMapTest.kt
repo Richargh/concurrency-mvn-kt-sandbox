@@ -1,10 +1,11 @@
 package de.richargh.sandbox.kt.mvn.concurrency.datastructures
 
 import org.apache.commons.lang3.time.StopWatch
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestReporter
 import java.util.concurrent.ConcurrentHashMap
+
 
 internal class ConcurrentOrderProtectedMapTest{
     @Test
@@ -22,11 +23,11 @@ internal class ConcurrentOrderProtectedMapTest{
             val threadName = Thread.currentThread().name
             threadNames[threadName] = Unit
             val userToAdd = User(UserId("$it"), Name(threadName), addVersion)
-            val userToDelete = User(UserId("${count - it}"), Name(threadName), deleteVersion)
+            val userToDelete = User(UserId("${count - it + 1}"), Name(threadName), deleteVersion)
 
             // double act
-            testling.put(userToDelete.userId, userToAdd)
-            testling.remove(UserId("${count - it}"), userToDelete)
+            testling.put(userToAdd.userId, userToAdd)
+            testling.remove(userToDelete.userId, userToDelete)
         }
         stopWatch.stop()
 
@@ -35,7 +36,7 @@ internal class ConcurrentOrderProtectedMapTest{
         testReporter.publishEntry("We executed on these threads ${threadNames.keys().toList().joinToString(", ")}")
 
         // assert
-        Assertions.assertThat(testling.count()).isEqualTo(count)
+        assertThat(testling.count()).isEqualTo(count)
     }
 
     @Test
@@ -53,11 +54,11 @@ internal class ConcurrentOrderProtectedMapTest{
             val threadName = Thread.currentThread().name
             threadNames[threadName] = Unit
             val userToAdd = User(UserId("$it"), Name(threadName), addVersion)
-            val userToDelete = User(UserId("${count - it}"), Name(threadName), deleteVersion)
+            val userToDelete = User(UserId("${count - it + 1}"), Name(threadName), deleteVersion)
 
             // double act
-            testling.put(userToDelete.userId, userToAdd)
-            testling.remove(UserId("${count - it}"), userToDelete)
+            testling.put(userToAdd.userId, userToAdd)
+            testling.remove(userToDelete.userId, userToDelete)
         }
         stopWatch.stop()
 
@@ -66,10 +67,10 @@ internal class ConcurrentOrderProtectedMapTest{
         testReporter.publishEntry("We executed on these threads ${threadNames.keys().toList().joinToString(", ")}")
 
         // assert
-        Assertions.assertThat(testling.count()).isEqualTo(0)
+        assertThat(testling.count()).isEqualTo(0)
     }
 
     private data class UserId(val rawValue: String)
     private data class Name(val rawValue: String)
-    private class User(val userId: UserId, val name: Name, override val version: Version): Versionable
+    private data class User(val userId: UserId, val name: Name, override val version: Version): Versionable
 }
