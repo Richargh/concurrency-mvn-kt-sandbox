@@ -85,7 +85,7 @@ class EvictingQueuePerformanceCompareTest {
         val threadNames = ConcurrentHashMap<String, Unit>()
 
         // act
-        var size = AtomicInteger(0)
+        val size = AtomicInteger(0)
         stopWatch.start()
         (1..count).toList().parallelStream().forEach {
             threadNames[Thread.currentThread().name] = Unit
