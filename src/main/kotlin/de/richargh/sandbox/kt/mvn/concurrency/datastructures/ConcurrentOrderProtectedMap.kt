@@ -2,19 +2,19 @@ package de.richargh.sandbox.kt.mvn.concurrency.datastructures
 
 import java.util.concurrent.ConcurrentHashMap
 
-class ConcurrentOrderProtectedMap<K, V: Versionable>(
+class ConcurrentOrderProtectedMap<K: Any, V: Versionable>(
         private val changeListeners: List<ChangeListener<K, V>> = emptyList()): VersionCheckingMap<K, V> {
     private val entries = ConcurrentHashMap<K, V>()
     private val deletes = ConcurrentHashMap<K, Version>()
 
     override fun put(key: K, value: V) {
-        entries.putIfNewer(key, value) {
-            changeListeners.forEach { it.beforePutChange(key, value) }
+        entries.putIfNewer(key, value) { old, new ->
+            changeListeners.forEach { it.beforePutChange(key, old, new) }
         }
     }
 
     override fun remove(key: K, value: V) {
-        entries.removeIfNewer(key, value) {
+        entries.removeIfNewer(key, value.version) {
             deletes.putIfNewer(key, value.version)
             changeListeners.forEach { it.beforeRemove(key, value) }
         }
@@ -26,12 +26,12 @@ class ConcurrentOrderProtectedMap<K, V: Versionable>(
 
     override fun count() = entries.mappingCount()
 
-    private fun ConcurrentHashMap<K, V>.putIfNewer(key: K, value: V, beforePut: (V) -> Unit) =
+    private fun ConcurrentHashMap<K, V>.putIfNewer(key: K, value: V, beforePut: (V?, V) -> Unit) =
             compute(key) { _, existing: V? ->
                 when {
                     (existing == null || existing.version < value.version)
                     && isDeletedVersionSmaller(key, value) -> {
-                        beforePut(value)
+                        beforePut(existing, value)
                         value
                     }
                     else                                                 -> {
@@ -45,7 +45,7 @@ class ConcurrentOrderProtectedMap<K, V: Versionable>(
         return lastDeletedVersion == null || lastDeletedVersion < value.version
     }
 
-    private fun ConcurrentHashMap<K, Version>.putIfNewer(key: K, version: Version) =
+    fun ConcurrentHashMap<K, Version>.putIfNewer(key: K, version: Version) =
             compute(key) { _, existingVersion: Version? ->
                 when {
                     existingVersion == null || existingVersion < version -> version
@@ -53,17 +53,5 @@ class ConcurrentOrderProtectedMap<K, V: Versionable>(
                 }
             }
 
-    private fun ConcurrentHashMap<K, V>.removeIfNewer(key: K, value: V, beforeRemove: (V?) -> Unit) =
-            compute(key) { _, existing: V? ->
-                // returning null removes the entry
-                when {
-                    existing == null || existing.version < value.version -> {
-                        beforeRemove(existing)
-                        null
-                    }
-                    else                                                 -> {
-                        existing
-                    }
-                }
-            }
+
 }
